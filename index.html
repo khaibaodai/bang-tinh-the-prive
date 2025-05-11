@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Công cụ tính dòng tiền - The Privé Luxury Apartment</title>
+    <!-- Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .banner {
+            background: linear-gradient(135deg, #1a365d 0%, #2d3748 100%);
+            color: white;
+            padding: 30px 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        .card-header {
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .btn-primary {
+            background-color: #1a365d;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        .btn-primary:hover {
+            background-color: #2d3748;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #e2e8f0;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f8fafc;
+            font-weight: 600;
+        }
+        .highlight {
+            background-color: #fffbeb;
+            font-weight: 600;
+        }
+        .total-row {
+            background-color: #f0f9ff;
+            font-weight: 700;
+        }
+        .discount-info {
+            background-color: #f0fff4;
+            border-left: 4px solid #48bb78;
+            padding: 10px;
+            margin-bottom: 15px;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .tab-button {
+            padding: 10px 15px;
+            border: 1px solid #e2e8f0;
+            background-color: #f8fafc;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 5px 5px 0 0;
+            margin-right: 5px;
+        }
+        .tab-button.active {
+            background-color: #1a365d;
+            color: white;
+            border-color: #1a365d;
+        }
+        @media print {
+            body {
+                font-size: 12pt;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="container">
+        <div class="banner">
+            <h1 class="text-3xl font-bold mb-2">The Privé Luxury Apartment</h1>
+            <p class="text-xl">Công cụ tính dòng tiền chi tiết</p>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2 class="text-2xl font-bold">Thông tin căn hộ</h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <div class="form-group">
+                        <label for="ma_can_ho">Mã căn hộ:</label>
+                        <input type="text" id="ma_can_ho" class="w-full border rounded-md px-3 py-2" placeholder="Ví dụ: A-1205">
+                    </div>
+                    <div class="form-group">
+                        <label for="gia_m2">Đơn giá trên m2 (VNĐ):</label>
+                        <input type="number" id="gia_m2" class="w-full border rounded-md px-3 py-2" placeholder="Ví dụ: 45000000">
+                    </div>
+                    <div class="form-group">
+                        <label for="dien_tich_tim_tuong">Diện tích tim tường (m²):</label>
+                        <input type="number" id="dien_tich_tim_tuong" class="w-full border rounded-md px-3 py-2" placeholder="Ví dụ: 85.5">
+                    </div>
+                    <div class="form-group">
+                        <label for="dien_tich_thong_thuy">Diện tích thông thủy (m²):</label>
+                        <input type="number" id="dien_tich_thong_thuy" class="w-full border rounded-md px-3 py-2" placeholder="Ví dụ: 80.2">
+                    </div>
+                </div>
+                <div>
+                    <div class="form-group">
+                        <label for="huong_can">Hướng căn hộ:</label>
+                        <input type="text" id="huong_can" class="w-full border rounded-md px-3 py-2" placeholder="Ví dụ: Đông Nam">
+                    </div>
+                    <div class="form-group">
+                        <label for="view_can">View căn hộ:</label>
+                        <input type="text" id="view_can" class="w-full border rounded-md px-3 py-2" placeholder="Ví dụ: Sông Sài Gòn">
+                    </div>
+                    <div class="form-group">
+                        <label for="loai_can_ho">Loại căn hộ:</label>
+                        <select id="loai_can_ho" class="w-full border rounded-md px-3 py-2">
+                            <option value="1PN">1 Phòng ngủ</option>
+                            <option value="2PN">2 Phòng ngủ</option>
+                            <option value="3PN">3 Phòng ngủ</option>
+                            <option value="Penthouse">Penthouse/Duplex</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="vat_percent">VAT (%):</label>
+                        <input type="number" id="vat_percent" class="w-full border rounded-md px-3 py-2" value="10">
+                    </div>
+                    <div class="form-group">
+                        <label for="phi_bao_tri_percent">Phí bảo trì (%):</label>
+                        <input type="number" id="phi_bao_tri_percent" class="w-full border rounded-md px-3 py-2" value="2">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2 class="text-2xl font-bold">Chính sách ưu đãi chung</h2>
+            </div>
+            <div class="mb-4">
+                <h3 class="text-lg font-semibold mb-2">1. Chiết khấu Đăng ký nguyện vọng (3%)</h3>
+                <div class="form-group">
+                    <input type="checkbox" id="ck_nguyen_vong" class="mr-2">
+                    <label for="ck_nguyen_vong">Khách hàng có Đăng ký nguyện vọng giao dịch sản phẩm được ĐVKD xác nhận trước 15/06/2025?</label>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <h3 class="text-lg font-semibold mb-2">2. Chiết khấu Ưu đãi đặc biệt (2%)</h3>
+                <div class="form-group">
+                    <input type="checkbox" id="ck_dac_biet_1" class="mr-2">
+                    <label for="ck_dac_biet_1">Khách hàng là KH đã/đang giao dịch sản phẩm do DXG làm CĐT/Nhà phát triển?</label>
+                </div>
+                <div class="form-group">
+                    <input type="checkbox" id="ck_dac_biet_2" class="mr-2">
+                    <label for="ck_dac_biet_2">Khách hàng là Cổ đông sở hữu cổ phiếu DXG/DXS từ 10,000 CP trước ngày công bố dự án?</label>
+                </div>
+                <div class="form-group">
+                    <input type="checkbox" id="ck_dac_biet_3" class="mr-2">
+                    <label for="ck_dac_biet_3">Khách hàng là CBNV ngân hàng tài trợ HOẶC có sổ tiết kiệm/TK ≥ 1 tỷ tại NH tài trợ?</label>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <h3 class="text-lg font-semibold mb-2">3. Chiết khấu Giao dịch nhiều sản phẩm</h3>
+                <div class="form-group">
+                    <input type="radio" name="ck_mua_nhieu" id="ck_mua_nhieu_1" value="1" checked class="mr-2">
+                    <label for="ck_mua_nhieu_1">1 sản phẩm (0%)</label>
+                </div>
+                <div class="form-group">
+                    <input type="radio" name="ck_mua_nhieu" id="ck_mua_nhieu_2" value="2" class="mr-2">
+                    <label for="ck_mua_nhieu_2">2 sản phẩm (1%)</label>
+                </div>
+                <div class="form-group">
+                    <input type="radio" name="ck_mua_nhieu" id="ck_mua_nhieu_3" value="3" class="mr-2">
+                    <label for="ck_mua_nhieu_3">Từ 3 sản phẩm trở lên (1.5%)</label>
+                </div>
+            </div>
+
+            <div class="mt-6">
+                <button id="btn-tinh-toan" class="btn-primary">Tính toán giá trị căn hộ</button>
+            </div>
+        </div>
+
+        <div class="card" id="ket-qua-tinh-toan" style="display: none;">
+            <div class="card-header">
+                <h2 class="text-2xl font-bold">Kết quả tính toán giá trị căn hộ</h2>
+            </div>
+            <div class="mb-6">
+                <h3 class="text-xl font-semibold mb-2">Thông tin căn hộ</h3>
+                <table class="w-full">
+                    <tr>
+                        <td class="font-semibold">Mã căn hộ:</td>
+                        <td id="result_ma_can_ho"></td>
+                        <td class="font-semibold">Loại căn hộ:</td>
+                        <td id="result_loai_can_ho"></td>
+                    </tr>
+                    <tr>
+                        <td class="font-semibold">Diện tích tim tường:</td>
+                        <td id="result_dien_tich_tim_tuong"></td>
+                        <td class="font-semibold">Diện tích thông thủy:</td>
+                        <td id="result_dien_tich_thong_thuy"></td>
+                    </tr>
+                    <tr>
+                        <td class="font-semibold">Hướng căn hộ:</td>
+                        <td id="result_huong_can"></td>
+                        <td class="font-semibold">View căn hộ:</td>
+                        <td id="result_view_can"></td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="mb-6">
+                <h3 class="text-xl font-semibold mb-2">Chi tiết giá trị căn hộ</h3>
+                <table class="w-full">
+                    <tr>
+                        <td class="font-semibold">Đơn giá trên m²:</td>
+                        <td id="result_gia_m2"></td>
+                    </tr>
+                    <tr>
+                        <td class="font-semibold">Giá bán căn hộ trước VAT:</td>
+                        <td id="result_gia_ban_truoc_vat"></td>
+                    </tr>
+                    <tr>
+                        <td class="font-semibold">VAT (<span id="result_vat_percent"></span>%):</td>
+                        <td id="result_vat_amount"></td>
+                    </tr>
+                    <tr>
+                        <td class="font-semibold">Tổng giá bán ban đầu (gồm VAT):</td>
+                        <td id="result_tong_gia_ban_ban_dau"></td>
+                    </tr>
+                    <tr>
+                        <td class="font-semibold">Phí bảo trì (<span id="result_phi_bao_tri_percent"></span>%):</td>
+                        <td id="result_phi_bao_tri_amount"></td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="discount-info p-4 bg-green-50 rounded-md mb-6">
+                <h3 class="text-xl font-semibold mb-2">Chiết khấu áp dụng</h3>
+                <table class="w-full">
+                    <tr id="ck_nguyen_vong_row" style="display: none;">
+                        <td>Chiết khấu Đăng ký nguyện vọng (3%):</td>
+                        <td id="result_ck_nguyen_vong_amount"></td>
+                    </tr>
+                    <tr id="ck_dac_biet_row" style="display: none;">
+                        <td>Chiết khấu Ưu đãi đặc biệt (2%):</td>
+                        <td id="result_ck_dac_biet_amount"></td>
+                    </tr>
+                    <tr id="ck_mua_nhieu_row" style="display: none;">
+                        <td>Chiết khấu Giao dịch nhiều sản phẩm (<span id="result_ck_mua_nhieu_percent"></span>%):</td>
+                        <td id="result_ck_mua_nhieu_amount"></td>
+                    </tr>
+                    <tr class="highlight">
+                        <td class="font-semibold">Tổng chiết khấu chung (<span id="result_tong_ck_chung_percent"></span>%):</td>
+                        <td id="result_tong_ck_chung_amount" class="font-semibold"></td>
+                    </tr>
+                    <tr class="total-row">
+                        <td class="font-bold">Giá bán cuối cùng gồm VAT sau chiết khấu:</td>
+                        <td id="result_gia_ban_sau_ck" class="font-bold"></td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="mb-4">
+                <h3 class="text-xl font-semibold mb-2">Chọn phương thức thanh toán</h3>
+                <div class="flex flex-wrap mb-4">
+                    <button class="tab-button active" data-target="pttt-chuan">PTTT Chuẩn (26 tháng)</button>
+                    <button class="tab-button" data-target="pttt-nhanh">PTTT Nhanh - Ưu đãi "Cực Khủng"</button>
+                    <button class="tab-button" data-target="pttt-vay">PTTT Hỗ trợ vay ưu đãi</button>
+                </div>
+            </div>
+
+            <!-- PTTT Chuẩn -->
+            <div id="pttt-chuan" class="tab-content active">
+                <h3 class="text-xl font-semibold mb-4">PHƯƠNG THỨC THANH TOÁN CHUẨN (26 THÁNG)</h3>
+                <div class="mb-4">
+                    <p class="text-gray-700">Thanh toán trong 26 tháng với đợt cuối khi nhận GCN. Đóng 70% trước khi bàn giao căn hộ.</p>
+                </div>
+                <table class="w-full mb-4">
+                    <thead>
+                        <tr>
+                            <th>Đợt</th>
+                            <th>Thời điểm</th>
+                            <th>Tỷ lệ (%)</th>
+                            <th>Số tiền (VNĐ)</th>
+                            <th>Ghi chú</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pttt-chuan-table">
+                        <!-- Dữ liệu sẽ được thêm vào bằng JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- PTTT Nhanh -->
+            <div id="pttt-nhanh" class="tab-content">
+                <h3 class="text-xl font-semibold mb-4">PHƯƠNG THỨC THANH TOÁN NHANH – ƯU ĐÃI "CỰC KHỦNG"</h3>
+                <div class="mb-4">
+                    <p class="text-gray-700">Thanh toán 70% giá trị căn hộ trong thời gian ngắn và nhận chiết khấu 8% trên số tiền 60% giá trị căn hộ.</p>
+                </div>
+                <table class="w-full mb-4">
+                    <thead>
+                        <tr>
+                            <th>Đợt</th>
+                            <th>Thời điểm</th>
+                            <th>Tỷ lệ (%)</th>
+                            <th>Số tiền (VNĐ)</th>
+                            <th>Chiết khấu</th>
+                            <th>Thực đóng (VNĐ)</th>
+                            <th>Ghi chú</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pttt-nhanh-table">
+                        <!-- Dữ liệu sẽ được thêm vào bằng JavaScript -->
+                    </tbody>
+                </table>
+                <div class="discount-info p-4">
+                    <h4 class="text-lg font-semibold">Tổng hợp chiết khấu khi chọn PTTT nhanh</h4>
+                    <table class="w-full">
+                        <tr>
+                            <td>Tổng chiết khấu chung:</td>
+                            <td id="pttt-nhanh-ck-chung"></td>
+                        </tr>
+                        <tr>
+                            <td>Chiết khấu từ PTTT nhanh (8% trên 60%):</td>
+                            <td id="pttt-nhanh-ck-nhanh"></td>
+                        </tr>
+                        <tr class="highlight">
+                            <td class="font-semibold">Tổng chiết khấu nhận được:</td>
+                            <td id="pttt-nhanh-tong-ck" class="font-semibold"></td>
+                        </tr>
+                        <tr class="total-row">
+                            <td class="font-bold">Tổng số tiền thực tế phải trả (gồm phí bảo trì):</td>
+                            <td id="pttt-nhanh-tong-thuc-te" class="font-bold"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- PTTT Vay -->
+            <div id="pttt-vay" class="tab-content">
+                <h3 class="text-xl font-semibold mb-4">PHƯƠNG THỨC HỖ TRỢ VAY ƯU ĐÃI – NHẬN NHÀ CHỈ VỚI 8,6%</h3>
+                
+                <div class="mb-6">
+                    <h4 class="text-lg font-semibold mb-2">Thông tin khoản vay</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="form-group">
+                            <label for="lai_suat_vay">Lãi suất vay ưu đãi (%/năm):</label>
+                            <input type="number" id="lai_suat_vay" class="w-full border rounded-md px-3 py-2" value="7.5">
+                        </div>
+                        <div class="form-group">
+                            <label for="thoi_gian_vay">Thời gian vay (năm):</label>
+                            <input type="number" id="thoi_gian_vay" class="w-full border rounded-md px-3 py-2" value="25">
+                        </div>
+                        <div class="form-group">
+                            <label for="thoi_gian_ho_tro_lai_suat">Thời gian hỗ trợ lãi suất (tháng):</label>
+                            <input type="number" id="thoi_gian_ho_tro_lai_suat" class="w-full border rounded-md px-3 py-2" value="24">
+                        </div>
+                        <div class="form-group">
+                            <label for="thoi_gian_an_han_goc">Thời gian ân hạn nợ gốc (tháng):</label>
+                            <input type="number" id="thoi_gian_an_han_goc" class="w-full border rounded-md px-3 py-2" value="24">
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <button id="tinh-vay" class="btn-primary">Tính khoản vay</button>
+                    </div>
+                </div>
+
+                <div id="ket-qua-vay" style="display: none;">
+                    <table class="w-full mb-4">
+                        <thead>
+                            <tr>
+                                <th>Đợt</th>
+                                <th>Thời điểm</th>
+                                <th>Tỷ lệ (%)</th>
+                                <th>Số tiền (VNĐ)</th>
+                                <th>Nguồn</th>
+                                <th>Ghi chú</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pttt-vay-table">
+                            <!-- Dữ liệu sẽ được thêm vào bằng JavaScript -->
+                        </tbody>
+                    </table>
+
+                    <div class="mb-6">
+                        <h4 class="text-lg font-semibold mb-2">Thông tin chi tiết khoản vay</h4>
+                        <table class="w-full">
+                            <tr>
+                                <td class="font-semibold">Tổng vốn tự có khách hàng:</td>
+                                <td id="vay-tong-von-tu-co"></td>
+                                <td>(<span id="vay-tong-von-tu-co-percent"></span>%)</td>
+                            </tr>
+                            <tr>
+                                <td class="font-semibold">Tổng số tiền vay ngân hàng:</td>
+                                <td id="vay-tong-so-tien-vay"></td>
+                                <td>(<span id="vay-tong-so-tien-vay-percent"></span>%)</td>
+                            </tr>
+                            <tr>
+                                <td class="font-semibold">Lãi suất vay ưu đãi:</td>
+                                <td id="vay-lai-suat-uu-dai"></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td class="font-semibold">Thời gian hỗ trợ lãi suất:</td>
+                                <td id="vay-thoi-gian-ho-tro"></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td class="font-semibold">Thời gian ân hạn gốc:</td>
+                                <td id="vay-thoi-gian-an-han"></td>
+                                <td></td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="mb-6">
+                        <h4 class="text-lg font-semibold mb-2">Chi tiết dự kiến trả góp hàng tháng</h4>
+                        <table class="w-full">
+                            <tr>
+                                <th>Giai đoạn</th>
+                                <th>Số tiền phải trả hàng tháng (VNĐ)</th>
+                                <th>Ghi chú</th>
+                            </tr>
+                            <tr>
+                                <td>Giai đoạn hỗ trợ lãi suất (24 tháng đầu)</td>
+                                <td id="vay-tra-gop-gd1">0 VNĐ</td>
+                                <td>Chủ đầu tư hỗ trợ 100% lãi suất</td>
+                            </tr>
+                            <tr>
+                                <td>Giai đoạn ân hạn gốc (sau hỗ trợ lãi suất)</td>
+                                <td id="vay-tra-gop-gd2"></td>
+                                <td>Chỉ trả lãi vay hàng tháng</td>
+                            </tr>
+                            <tr>
+                                <td>Giai đoạn trả nợ đều hàng tháng</td>
+                                <td id="vay-tra-gop-gd3"></td>
+                                <td>Trả gốc và lãi đều hàng tháng</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-6 no-print">
+                <button id="btn-in" class="btn-primary">In báo cáo</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Định dạng tiền tệ VNĐ
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
+        }
+
+        // Định dạng số thập phân
+        function formatNumber(number, decimals = 2) {
+            return number.toLocaleString('vi-VN', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+        }
+
+        // Tính toán giá trị căn hộ
+        document.getElementById('btn-tinh-toan').addEventListener('click', function() {
+            // Lấy giá trị từ các trường input
+            const maCan = document.getElementById('ma_can_ho').value;
+            const giaM2 = parseFloat(document.getElementById('gia_m2').value) || 0;
+            const dienTichTimTuong = parseFloat(document.getElementById('dien_tich_tim_tuong').value) || 0;
+            const dienTichThongThuy = parseFloat(document.getElementById('dien_tich_thong_thuy').value) || 0;
+            const huongCan = document.getElementById('huong_can').value;
+            const viewCan = document.getElementById('view_can').value;
+            const loaiCan = document.getElementById('loai_can_ho').value;
+            const vatPercent = parseFloat(document.getElementById('vat_percent').value) || 10;
+            const phiBaoTriPercent = parseFloat(document.getElementById('phi_bao_tri_percent').value) || 2;
+
+            // Kiểm tra dữ liệu đầu vào
+            if (giaM2 <= 0 || dienTichTimTuong <= 0) {
+                alert('Vui lòng nhập đầy đủ thông tin căn hộ!');
+                return;
+            }
+
+            // Tính giá trị căn hộ cơ bản
+            const giaBanTruocVAT = giaM2 * dienTichTimTuong;
+            const vatAmount = giaBanTruocVAT * (vatPercent / 100);
+            const tongGiaBanBanDau = giaBanTruocVAT + vatAmount;
+            const phiBaoTriAmount = giaBanTruocVAT * (phiBaoTriPercent / 100);
+
+            // Tính chiết khấu chung
+            let ckNguyenVongPercent = document.getElementById('ck_nguyen_vong').checked ? 3 : 0;
+            let ckDacBietPercent = 0;
+            if (document.getElementById('ck_dac_biet_1').checked || 
+                document.getElementById('ck_dac_biet_2').checked || 
+                document.getElementById('ck_dac_biet_3').checked) {
+                ckDacBietPercent = 2;
+            }
+
+            let ckMuaNhieuPercent = 0;
+            const muaNhieuValue = document.querySelector('input[name="ck_mua_nhieu"]:checked').value;
+            if (muaNhieuValue === '2') {
+                ckMuaNhieuPercent = 1;
+            } else if (muaNhieuValue === '3') {
+                ckMuaNhieuPercent = 1.5;
+            }
+
+            const tongCKChungPercent = ckNguyenVongPercent + ckDacBietPercent + ckMuaNhieuPercent;
+            const ckNguyenVongAmount = tongGiaBanBanDau * (ckNguyenVongPercent / 100);
+            const ckDacBietAmount = tongGiaBanBanDau * (ckDacBietPercent / 100);
+            const ckMuaNhieuAmount = tongGiaBanBanDau * (ckMuaNhieuPercent / 100);
+            const tongCKChungAmount = tongGiaBanBanDau * (tongCKChungPercent / 100);
+            const giaBanSauCK = tongGiaBanBanDau - tongCKChungAmount;
+
+            // Hiển thị kết quả thông tin căn hộ
+            document.getElementById('result_ma_can_ho').textContent = maCan;
+            document.getElementById('result_loai_can_ho').textContent = loaiCan;
+            document.getElementById('result_dien_tich_tim_tuong').textContent = `${formatNumber(dienTichTimTuong)} m²`;
+            document.getElementById('result_dien_tich_thong_thuy').textContent = `${formatNumber(dienTichThongThuy)} m²`;
+            document.getElementById('result_huong_can').textContent = huongCan;
+            document.getElementById('result_view_can').textContent = viewCan;
+
+            // Hiển thị kết quả chi tiết giá trị
+            document.getElementById('result_gia_m2').textContent = formatCurrency(giaM2);
+            document.getElementById('result_gia_ban_truoc_vat').textContent = formatCurrency(giaBanTruocVAT);
+            document.getElementById('result_vat_percent').textContent = vatPercent;
+            document.getElementById('result_vat_amount').textContent = formatCurrency(vatAmount);
+            document.getElementById('result_tong_gia_ban_ban_dau').textContent = formatCurrency(tongGiaBanBanDau);
+            document.getElementById('result_phi_bao_tri_percent').textContent = phiBaoTriPercent;
+            document.getElementById('result_phi_bao_tri_amount').textContent = formatCurrency(phiBaoTriAmount);
+
+            // Hiển thị kết quả chiết khấu
+            document.getElementById('ck_nguyen_vong_row').style.display = ckNguyenVongPercent > 0 ? 'table-row' : 'none';
+            document.getElementById('result_ck_nguyen_vong_amount').textContent = formatCurrency(ckNguyenVongAmount);
+
+            document.getElementById('ck_dac_biet_row').style.display = ckDacBietPercent > 0 ? 'table-row' : 'none';
+            document.getElementById('result_ck_dac_biet_amount').textContent = formatCurrency(ckDacBietAmount);
+
+            document.getElementById('ck_mua_nhieu_row').style.display = ckMuaNhieuPercent > 0 ? 'table-row' : 'none';
+            document.getElementById('result_ck_mua_nhieu_percent').textContent = ckMuaNhieuPercent;
+            document.getElementById('result_ck_mua_nhieu_amount').textContent = formatCurrency(ckMuaNhieuAmount);
+
+            document.getElementById('result_tong_ck_chung_percent').textContent = tongCKChungPercent;
+            document.getElementById('result_tong_ck_chung_amount').textContent = formatCurrency(tongCKChungAmount);
+            document.getElementById('result_gia_ban_sau_ck').textContent = formatCurrency(giaBanSauCK);
+
+            // Tính toán cho các phương thức thanh toán
+            tinhPTTTChuan(giaBanSauCK, phiBaoTriAmount);
+            tinhPTTTNhanh(giaBanSauCK, phiBaoTriAmount, tongCKChungAmount);
+            
+            // Lưu trữ giá trị cho tính toán PTTT vay
+            document.querySelector(':root').style.setProperty('--gia-ban-sau-ck', giaBanSauCK);
+            document.querySelector(':root').style.setProperty('--phi-bao-tri', phiBaoTriAmount);
+            document.querySelector(':root').style.setProperty('--tong-ck-chung', tongCKChungAmount);
+
+            // Hiển thị kết quả
+            document.getElementById('ket-qua-tinh-toan').style.display = 'block';
+
+            // Cuộn trang xuống kết quả
+            document.getElementById('ket-qua-tinh-toan').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // Tính toán PTTT Chuẩn
+        function tinhPTTTChuan(giaBanSauCK, phiBaoTriAmount) {
+            const tienDatCoc = 100000000;
+            const dot1KyHDMB = giaBanSauCK * 0.1;
+            const dot1ThucDong = Math.max(0, dot1KyHDMB - tienDatCoc);
+            const coDuDatCoc = tienDatCoc > dot1KyHDMB ? tienDatCoc - dot1KyHDMB : 0;
+            
+            const dotBanGiao = giaBanSauCK * 0.25;
+            const dotNhanGCN = giaBanSauCK * 0.05;
+            
+            // Tạo HTML cho bảng PTTT Chuẩn
+            let html = `
+                <tr>
+                    <td>Đặt cọc</td>
+                    <td>Ngay khi đặt cọc</td>
+                    <td>Cố định</td>
+                    <td>${formatCurrency(tienDatCoc)}</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Đợt 1</td>
+                    <td>Ký HĐMB</td>
+                    <td>10%</td>
+                    <td>${formatCurrency(dot1KyHDMB)}</td>
+                    <td>Thực đóng: ${formatCurrency(dot1ThucDong)}${coDuDatCoc > 0 ? ' (Cọc dư: ' + formatCurrency(coDuDatCoc) + ' sẽ cấn trừ đợt tiếp theo)' : ''}</td>
+                </tr>`;
+
+            // Tính 24 đợt thanh toán tiếp theo, mỗi đợt 2.5%
+            let cocDu = coDuDatCoc;
+            for (let i = 1; i <= 24; i++) {
+                const tienDot = giaBanSauCK * 0.025;
+                const tienThucDong = Math.max(0, tienDot - cocDu);
+                cocDu = cocDu > tienDot ? cocDu - tienDot : 0;
+                
+                html += `
+                <tr>
+                    <td>Đợt ${i + 1}</td>
+                    <td>Tháng thứ ${i} kể từ ngày ký HĐMB</td>
+                    <td>2.5%</td>
+                    <td>${formatCurrency(tienDot)}</td>
+                    <td>Thực đóng: ${formatCurrency(tienThucDong)}${cocDu > 0 ? ' (Cọc dư còn lại: ' + formatCurrency(cocDu) + ')' : ''}</td>
+                </tr>`;
+            }
+            
+            // Đợt bàn giao và nhận GCN
+            html += `
+                <tr>
+                    <td>Đợt ${24 + 2}</td>
+                    <td>Khi nhận bàn giao căn hộ</td>
+                    <td>25%</td>
+                    <td>${formatCurrency(dotBanGiao)}</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Đợt ${24 + 3}</td>
+                    <td>Khi nhận Giấy chứng nhận quyền sở hữu</td>
+                    <td>5%</td>
+                    <td>${formatCurrency(dotNhanGCN)}</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Phí bảo trì</td>
+                    <td>Khi nhận bàn giao căn hộ</td>
+                    <td>2% giá bán trước VAT</td>
+                    <td>${formatCurrency(phiBaoTriAmount)}</td>
+                    <td></td>
+                </tr>
+                <tr class="total-row">
+                    <td colspan="3" class="font-bold">TỔNG CỘNG</td>
+                    <td class="font-bold">${formatCurrency(giaBanSauCK + phiBaoTriAmount)}</td>
+                    <td></td>
+                </tr>
+            `;
+            
+            document.getElementById('pttt-chuan-table').innerHTML = html;
+        }
+
+        // Tính toán PTTT Nhanh
+        function tinhPTTTNhanh(giaBanSauCK, phiBaoTriAmount, tongCKChungAmount) {
+            const tienDatCoc = 100000000;
+            const dot1KyHDMB = giaBanSauCK * 0.1;
+            const dot1ThucDong = Math.max(0, dot1KyHDMB - tienDatCoc);
+            
+            const dot2ThanhToanNhanh = giaBanSauCK * 0.6;
+            const ckThanhToanNhanhAmount = dot2ThanhToanNhanh * 0.08;
+            const dot2ThucDong = dot2ThanhToanNhanh - ckThanhToanNhanhAmount;
+            
+            const dotBanGiao = giaBanSauCK * 0.25;
+            const dotNhanGCN = giaBanSauCK * 0.05;
+            
+            const tongThucTe = dot1ThucDong + dot2ThucDong + dotBanGiao + dotNhanGCN + phiBaoTriAmount + tienDatCoc;
+            const tongCK = tongCKChungAmount + ckThanhToanNhanhAmount;
+            
+            // Tạo HTML cho bảng PTTT Nhanh
+            let html = `
+                <tr>
+                    <td>Đặt cọc</td>
+                    <td>Ngay khi đặt cọc</td>
+                    <td>Cố định</td>
+                    <td>${formatCurrency(tienDatCoc)}</td>
+                    <td>-</td>
+                    <td>${formatCurrency(tienDatCoc)}</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Đợt 1</td>
+                    <td>Ký HĐMB</td>
+                    <td>10%</td>
+                    <td>${formatCurrency(dot1KyHDMB)}</td>
+                    <td>-</td>
+                    <td>${formatCurrency(dot1ThucDong)}</td>
+                    <td>Thực đóng = Đợt 1 - Tiền đặt cọc</td>
+                </tr>
+                <tr class="highlight">
+                    <td>Đợt 2</td>
+                    <td>15 ngày kể từ ngày ký HĐMB</td>
+                    <td>60%</td>
+                    <td>${formatCurrency(dot2ThanhToanNhanh)}</td>
+                    <td>${formatCurrency(ckThanhToanNhanhAmount)} (8%)</td>
+                    <td>${formatCurrency(dot2ThucDong)}</td>
+                    <td>Chiết khấu 8% trên 60% giá trị căn hộ</td>
+                </tr>
+                <tr>
+                    <td>Đợt 3</td>
+                    <td>Khi nhận bàn giao căn hộ</td>
+                    <td>25%</td>
+                    <td>${formatCurrency(dotBanGiao)}</td>
+                    <td>-</td>
+                    <td>${formatCurrency(dotBanGiao)}</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Đợt 4</td>
+                    <td>Khi nhận Giấy chứng nhận quyền sở hữu</td>
+                    <td>5%</td>
+                    <td>${formatCurrency(dotNhanGCN)}</td>
+                    <td>-</td>
+                    <td>${formatCurrency(dotNhanGCN)}</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Phí bảo trì</td>
+                    <td>Khi nhận bàn giao căn hộ</td>
+                    <td>2% giá bán trước VAT</td>
+                    <td>${formatCurrency(phiBaoTriAmount)}</td>
+                    <td>-</td>
+                    <td>${formatCurrency(phiBaoTriAmount)}</td>
+                    <td></td>
+                </tr>
+                <tr class="total-row">
+                    <td colspan="3" class="font-bold">TỔNG CỘNG</td>
+                    <td class="font-bold">${formatCurrency(giaBanSauCK + phiBaoTriAmount)}</td>
+                    <td class="font-bold">${formatCurrency(ckThanhToanNhanhAmount)}</td>
+                    <td class="font-bold">${formatCurrency(tongThucTe)}</td>
+                    <td></td>
+                </tr>
+            `;
+            
+            document.getElementById('pttt-nhanh-table').innerHTML = html;
+            
+            // Hiển thị thông tin chiết khấu PTTT nhanh
+            document.getElementById('pttt-nhanh-ck-chung').textContent = formatCurrency(tongCKChungAmount);
+            document.getElementById('pttt-nhanh-ck-nhanh').textContent = formatCurrency(ckThanhToanNhanhAmount);
+            document.getElementById('pttt-nhanh-tong-ck').textContent = formatCurrency(tongCK);
+            document.getElementById('pttt-nhanh-tong-thuc-te').textContent = formatCurrency(tongThucTe);
+        }
+
+        // Tính toán PTTT Vay
+        document.getElementById('tinh-vay').addEventListener('click', function() {
+            const giaBanSauCK = parseFloat(getComputedStyle(document.querySelector(':root')).getPropertyValue('--gia-ban-sau-ck')) || 0;
+            const phiBaoTriAmount = parseFloat(getComputedStyle(document.querySelector(':root')).getPropertyValue('--phi-bao-tri')) || 0;
+            const tongCKChungAmount = parseFloat(getComputedStyle(document.querySelector(':root')).getPropertyValue('--tong-ck-chung')) || 0;
+            
+            const laiSuatVay = parseFloat(document.getElementById('lai_suat_vay').value) || 7.5;
+            const thoiGianVay = parseFloat(document.getElementById('thoi_gian_vay').value) || 25;
+            const thoiGianHoTroLS = parseFloat(document.getElementById('thoi_gian_ho_tro_lai_suat').value) || 24;
+            const thoiGianAnHanGoc = parseFloat(document.getElementById('thoi_gian_an_han_goc').value) || 24;
+            
+            const tienDatCoc = 100000000;
+            const vonTuCo1 = giaBanSauCK * 0.086;
+            const vonTuCo1ThucDong = Math.max(0, vonTuCo1 - tienDatCoc);
+            
+            const nganHangGiaiNganDot1 = giaBanSauCK * 0.614;
+            const banGiaoKhachThanhToan = giaBanSauCK * 0.2;
+            const banGiaoNganHangThanhToan = giaBanSauCK * 0.05;
+            const dotNhanGCN = giaBanSauCK * 0.05;
+            
+            const tongVonTuCo = vonTuCo1 + banGiaoKhachThanhToan + dotNhanGCN;
+            const tongVonTuCoPercent = (tongVonTuCo / giaBanSauCK) * 100;
+            
+            const tongVayNganHang = nganHangGiaiNganDot1 + banGiaoNganHangThanhToan;
+            const tongVayNganHangPercent = (tongVayNganHang / giaBanSauCK) * 100;
+            
+            // Tính toán khoản trả góp hàng tháng
+            const laiSuatThang = laiSuatVay / 100 / 12;
+            const soThangVay = thoiGianVay * 12;
+            
+            // Giai đoạn 1: Hỗ trợ lãi suất
+            const traGopGD1 = 0; // CĐT hỗ trợ 100%
+            
+            // Giai đoạn 2: Ân hạn gốc (chỉ trả lãi)
+            const gd2ThangBatDau = thoiGianHoTroLS + 1;
+            const gd2ThangKetThuc = thoiGianAnHanGoc;
+            const traGopGD2 = tongVayNganHang * laiSuatThang;
+            
+            // Giai đoạn 3: Trả nợ đều hàng tháng
+            const gd3ThangConLai = soThangVay - thoiGianAnHanGoc;
+            const traGopGD3 = tongVayNganHang * laiSuatThang * Math.pow(1 + laiSuatThang, gd3ThangConLai) / (Math.pow(1 + laiSuatThang, gd3ThangConLai) - 1);
+            
+            // Tạo HTML cho bảng PTTT Vay
+            let html = `
+                <tr>
+                    <td>Đặt cọc</td>
+                    <td>Ngay khi đặt cọc</td>
+                    <td>Cố định</td>
+                    <td>${formatCurrency(tienDatCoc)}</td>
+                    <td>Khách hàng</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Đợt 1</td>
+                    <td>Ký HĐMB</td>
+                    <td>8.6%</td>
+                    <td>${formatCurrency(vonTuCo1)}</td>
+                    <td>Khách hàng</td>
+                    <td>Thực đóng: ${formatCurrency(vonTuCo1ThucDong)}</td>
+                </tr>
+                <tr>
+                    <td>Đợt 2</td>
+                    <td>Thời điểm ngân hàng giải ngân</td>
+                    <td>61.4%</td>
+                    <td>${formatCurrency(nganHangGiaiNganDot1)}</td>
+                    <td>Ngân hàng</td>
+                    <td>Giải ngân khi đủ điều kiện</td>
+                </tr>
+                <tr>
+                    <td>Đợt 3</td>
+                    <td>Khi nhận bàn giao căn hộ</td>
+                    <td>20%</td>
+                    <td>${formatCurrency(banGiaoKhachThanhToan)}</td>
+                    <td>Khách hàng</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Đợt 4</td>
+                    <td>Khi nhận bàn giao căn hộ</td>
+                    <td>5%</td>
+                    <td>${formatCurrency(banGiaoNganHangThanhToan)}</td>
+                    <td>Ngân hàng</td>
+                    <td>Giải ngân khi bàn giao</td>
+                </tr>
+                <tr>
+                    <td>Đợt 5</td>
+                    <td>Khi nhận Giấy chứng nhận quyền sở hữu</td>
+                    <td>5%</td>
+                    <td>${formatCurrency(dotNhanGCN)}</td>
+                    <td>Khách hàng</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Phí bảo trì</td>
+                    <td>Khi nhận bàn giao căn hộ</td>
+                    <td>2% giá bán trước VAT</td>
+                    <td>${formatCurrency(phiBaoTriAmount)}</td>
+                    <td>Khách hàng</td>
+                    <td>Không nằm trong gói vay</td>
+                </tr>
+                <tr class="total-row">
+                    <td colspan="3" class="font-bold">TỔNG CỘNG</td>
+                    <td class="font-bold">${formatCurrency(giaBanSauCK + phiBaoTriAmount)}</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            `;
+            
+            document.getElementById('pttt-vay-table').innerHTML = html;
+            
+            // Hiển thị thông tin chi tiết khoản vay
+            document.getElementById('vay-tong-von-tu-co').textContent = formatCurrency(tongVonTuCo);
+            document.getElementById('vay-tong-von-tu-co-percent').textContent = formatNumber(tongVonTuCoPercent, 1);
+            document.getElementById('vay-tong-so-tien-vay').textContent = formatCurrency(tongVayNganHang);
+            document.getElementById('vay-tong-so-tien-vay-percent').textContent = formatNumber(tongVayNganHangPercent, 1);
+            document.getElementById('vay-lai-suat-uu-dai').textContent = `${laiSuatVay}%/năm`;
+            document.getElementById('vay-thoi-gian-ho-tro').textContent = `${thoiGianHoTroLS} tháng`;
+            document.getElementById('vay-thoi-gian-an-han').textContent = `${thoiGianAnHanGoc} tháng`;
+            
+            // Hiển thị thông tin trả góp
+            document.getElementById('vay-tra-gop-gd2').textContent = formatCurrency(traGopGD2);
+            document.getElementById('vay-tra-gop-gd3').textContent = formatCurrency(traGopGD3);
+            
+            // Hiển thị kết quả
+            document.getElementById('ket-qua-vay').style.display = 'block';
+        });
+
+        // Chuyển tab phương thức thanh toán
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.addEventListener('click', function() {
+                // Xóa class active từ tất cả các tab
+                document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                
+                // Thêm class active cho tab được chọn
+                this.classList.add('active');
+                document.getElementById(this.getAttribute('data-target')).classList.add('active');
+            });
+        });
+
+        // In báo cáo
+        document.getElementById('btn-in').addEventListener('click', function() {
+            window.print();
+        });
+        <div class="mt-8 text-center text-gray-600 text-sm no-print">
+            <p>© 2025 Công cụ Phân tích Đầu tư Bất động sản | Thiết kế bởi OneS Corp</p>
+        </div>
+        // Lưu các giá trị tính toán vào CSS variables để dùng giữa các hàm
+        document.querySelector(':root').style.setProperty('--gia-ban-sau-ck', '0');
+        document.querySelector(':root').style.setProperty('--phi-bao-tri', '0');
+        document.querySelector(':root').style.setProperty('--tong-ck-chung', '0');
+    </script>
+</body>
+</html>
